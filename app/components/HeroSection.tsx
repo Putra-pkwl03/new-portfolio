@@ -236,7 +236,7 @@ export function HeroSection({ activeMenu, onSelectMenu }: HeroSectionProps) {
         {/* ================== DUDUKAN / PODIUM SEGI EMPAT 3D (PEDESTAL) =================== */}
         <div 
           style={{ transformStyle: "preserve-3d", transform: "translateZ(-10px) rotateX(65deg) rotateZ(45deg)" }}
-          className="hidden md:flex absolute -bottom-40 w-86 left-2 h-84 -z-20 pointer-events-none select-none items-center justify-center origin-center"
+          className="hidden md:flex absolute -bottom-40 w-86 left-4 h-84 -z-20 pointer-events-none select-none items-center justify-center origin-center"
         >
           <div className="absolute w-full h-full rounded-2xl border-2 border-cyan-500/40 bg-gradient-to-br from-cyan-500/10 via-blue-600/5 to-transparent blur-[0.5px] shadow-[0_0_35px_rgba(6,182,212,0.3)] animate-pulse" />
           <div className="absolute w-[82%] h-[82%] rounded-xl border border-blue-400/40 bg-slate-950/85 backdrop-blur-md shadow-[inset_0_0_20px_rgba(34,211,238,0.2)]" />

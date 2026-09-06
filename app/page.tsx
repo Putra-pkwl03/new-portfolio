@@ -68,7 +68,7 @@ export default function Home() {
           >
             {/* HERO SECTION */}
             <div
-              className={`flex-shrink-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 w-full pt-2 md:pt-36 transition-opacity duration-300 ml-0 md:ml-16 ${
+              className={`flex-shrink-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 w-full pt-2 md:pt-36 transition-opacity duration-300 ${
                 activeMenu
                   ? "pointer-events-none opacity-30 sm:opacity-100"
                   : "pointer-events-auto opacity-100"
