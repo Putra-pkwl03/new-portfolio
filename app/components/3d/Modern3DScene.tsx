@@ -59,7 +59,7 @@ function Interactive3DHub({
 
     if (isMobile) {
       targetPosX = 0;
-      targetPosY = -1.1;
+      targetPosY = -0.8;
       targetScale = 0.32;
     } else if (isTablet) {
       targetPosX = 0.55;

@@ -64,7 +64,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="relative z-10 h-full max-w-8xl mx-auto flex flex-col justify-between px-4 pt-3 pb-2 sm:p-6 md:p-10 lg:p-12 pointer-events-none"
+           className="relative z-10 h-[100dvh] w-full max-w-8xl mx-auto flex flex-col justify-between px-4 pt-4 pb-6 sm:p-6 md:p-10 lg:p-12 pointer-events-none"
           >
             {/* HERO SECTION */}
             <div
