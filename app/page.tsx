@@ -1,69 +1,100 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import { motion, AnimatePresence } from "framer-motion";
+import { LoadingScreen } from "./components/LoadingScreen";
+import { HeroSection } from "./components/HeroSection";
+import { FooterHud } from "./components/FooterHud";
+
+const Modern3DScene = dynamic(() => import("@/app/components/3d/Modern3DScene"), {
+  ssr: false,
+});
+
+const Content3DDisplay = dynamic(() => import("./components/3d/Content3DDisplay"), {
+  ssr: false,
+});
 
 export default function Home() {
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  
+  // State 1: Menandai apakah file 3D sudah selesai di-load di background
+  const [is3DLoaded, setIs3DLoaded] = useState(false);
+  
+  // State 2: Menandai apakah user SUDAH mengklik tombol "MULAI EKSPLORASI"
+  const [hasEntered, setHasEntered] = useState(false);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className="relative h-screen w-full overflow-hidden text-slate-100 font-sans bg-[#030712] select-none">
+      
+      {/* 1. Loading Screen: NONGKRONG TERUS sampai user klik tombol */}
+      <LoadingScreen 
+        isReady={is3DLoaded} 
+        onStart={() => setHasEntered(true)} 
+      />
+
+      {/* 2. Interactive 3D Canvas */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{
+          opacity: hasEntered ? 1 : 0,
+          scale: hasEntered ? 1 : 0.95,
+        }}
+        transition={{
+          duration: 1.2,
+          ease: [0.16, 1, 0.3, 1],
+          delay: 0.1,
+        }}
+        className="absolute inset-0 z-0 h-full w-full pointer-events-auto"
+      >
+        <Modern3DScene
+          activeMenu={activeMenu}
+          /* PERBAIKAN: Gunakan !hasEntered agar 3D tetap disembunyikan sampai tombol diklik */
+          isLoading={!hasEntered}
+          onSelectMenu={(id) => setActiveMenu(id)}
+          onLoaded={() => setIs3DLoaded(true)}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </motion.div>
+
+      {/* 3. HUD Overlay & Content */}
+      <AnimatePresence>
+        {hasEntered && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="relative z-10 h-full max-w-8xl mx-auto flex flex-col justify-between px-4 pt-3 pb-2 sm:p-6 md:p-10 lg:p-12 pointer-events-none"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            {/* HERO SECTION */}
+            <div
+              className={`flex-shrink-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 w-full pt-2 md:pt-36 transition-opacity duration-300 ml-0 md:ml-16 ${
+                activeMenu
+                  ? "pointer-events-none opacity-30 sm:opacity-100"
+                  : "pointer-events-auto opacity-100"
+              }`}
+            >
+              <HeroSection activeMenu={activeMenu} onSelectMenu={(id) => setActiveMenu(id)} />
+            </div>
+
+            {/* FOOTER */}
+            <div className="pointer-events-auto pb-1 sm:pb-0 mb-0 ml-0 md:ml-16">
+              <FooterHud />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 4. CONTENT DISPLAY (Modal Portal) */}
+      {activeMenu && (
+        <div className="relative z-[100] pointer-events-none">
+          <Content3DDisplay
+            activeMenu={activeMenu}
+            onClose={() => setActiveMenu(null)}
+          />
         </div>
-      </main>
-    </div>
+      )}
+
+    </main>
   );
 }
